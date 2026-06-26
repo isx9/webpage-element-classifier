@@ -22,13 +22,17 @@ Given a screenshot of a webpage, predict which UI element types are visually pre
 | `iframe` | Ads and third-party embedded content |
 | `field` | Form input fields |
 
-This is a **multi-label classification** problem: each screenshot can have multiple element types present simultaneously (average 5.3 labels per image).
+This is a **multi-label classification** problem: each screenshot can have multiple element types present simultaneously (average ~5.3 labels per image).
 
 ## Non-trivial challenges
 
-- **Severe class imbalance** — `label` appears in 5.4% of images, `text` in 97.7%
-- **Multi-label output** — each image has on average 5.3 active labels out of 8
+- **Severe class imbalance** — `label` appears in almost 5.4% of images, `text` in about 97.7%
+- **Multi-label output** — each image has on average of 5.3 active labels out of 8
 - **High-dimensional image input** — managed via frozen CNN transfer learning (no GPU required)
+
+## Pipeline
+
+
 
 ## Pipeline
 screenshot → ResNet50 (frozen, ImageNet) → 2048-dim embedding → OneVsRest classifier → [button, heading, ..., iframe]
@@ -36,10 +40,14 @@ screenshot → ResNet50 (frozen, ImageNet) → 2048-dim embedding → OneVsRest 
 ## Methods
 
 - **Feature extraction** — frozen ResNet50 pretrained on ImageNet, 2048-dim output
-- **EDA** — PCA, MDS, k-means, NMF on label matrix, Isolation Forest, hierarchical clustering
-- **Models** — Logistic Regression, SVM, Random Forest, XGBoost wrapped in OneVsRest
+- **EDA** — PCA, t-SNE, MDS, k-means, fuzzy c-means, NMF on the label matrix, outlier detection (Isolation Forest, LOF), hierarchical clustering
+- **Models** — Logistic Regression and Random Forest, each wrapped in OneVsRest and tuned with GridSearchCV (5-fold cross-validation)
 - **Evaluation** — Hamming loss, micro/macro F1, per-class ROC-AUC, precision-recall curves
-- **Interpretation** — saliency maps, per-class feature importance, failure case analysis
+- **Interpretation** — LR coefficient sparsity, Random Forest feature importance, failure case analysis
+
+## Results
+
+Both models reach comparable overall performance (macro-F1 ≈ 0.70–0.73 on the test set). Random Forest achieves higher overall accuracy (micro-F1 0.90, lower Hamming loss) by performing very well on common classes such as `text`, `image`, and `button`, while Logistic Regression handles the rare classes more evenly, giving it a higher macro-F1. Performance is driven mainly by each element's frequency and visual distinctiveness rather than by the choice of classifier: distinctive, common elements are predicted almost perfectly, while rare or visually ambiguous ones (`label`, `iframe`) remain difficult.
 
 ## Project structure
 
