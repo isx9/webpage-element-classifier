@@ -75,4 +75,4 @@ cd webpage-element-classifier
 pip install -r requirements.txt
 ```
 
-Download the dataset from [Roboflow](https://public.roboflow.com/object-detection/website-screenshots) and extract into `data/raw/`
+Download the dataset from [Roboflow](https://public.roboflow.com/object-detection/website-screenshots) and extract into `data/raw/`.
