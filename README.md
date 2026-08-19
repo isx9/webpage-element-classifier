@@ -52,20 +52,15 @@ Both models reach comparable overall performance (macro-F1 ≈ 0.70–0.73 on th
 ## Project structure
 
 webpage-element-classifier/
-
+```
 ├── data/
-
 │   └── raw/               # original dataset (gitignored)
-
 ├── embeddings/            # extracted .npy feature matrices (gitignored)
-
 ├── figures/               # saved plots
-
 ├── notebook.ipynb         # main analysis notebook
-
 ├── requirements.txt
-
 └── README.md
+```
 
 ## Setup
 
